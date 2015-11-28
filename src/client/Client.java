@@ -1,8 +1,8 @@
-package main;
+package client;
 import java.io.*;
 import java.net.*;
 
-public class MyClient {
+public class Client {
 	public static void main(String[] args) {
 		//Try with resources, ensures that resources declared are closed (if they implement autocloseable)
 		
