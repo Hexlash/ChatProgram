@@ -35,7 +35,7 @@ public class ServerGUI extends JPanel implements Runnable{
 	private static String log;
 	
 	// Server
-	Server server = new Server();
+	Server server;
 	
 	public ServerGUI(){
 		super();
@@ -69,15 +69,18 @@ public class ServerGUI extends JPanel implements Runnable{
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 		running = true;
-
+		
+		
 		// Creating log
 		textArea = new TextArea("Chat Server V.1", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
-		textArea.setBounds(HEIGHT, 0, WIDTH-HEIGHT, HEIGHT/2);
+		textArea.setBounds(0, 0, WIDTH-WIDTH/10, HEIGHT-50);
 		add(textArea);										// Add it to the screen
 		setLayout(new BorderLayout());						// Required
 		textArea.setEditable(false);						// Preventing the box from being editable
 		textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
-		log ="";
+		log = "";
+		
+		server = new Server();
 		
 		draw();
 		drawToScreen();
