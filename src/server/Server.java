@@ -19,8 +19,11 @@ public class Server implements Runnable{
 	private int backlog = 50;
 	private InetAddress addr;
 
+	// Thread Variables
 	private boolean running;
 	Thread t;
+	
+	public static boolean updated = false;
 
 	public Server() {
 		clients = new ArrayList<ClientThread>();
@@ -71,13 +74,15 @@ public class Server implements Runnable{
 //			if (!running)
 //				break;
 
-			ServerGUI.addToLog("Starting new client search");
+			//ServerGUI.addToLog("Starting new client search");
 			// Create new clientThread
 			clients.add(new ClientThread(serverSocket));
+			
 			// Seek connections on that thread
-			//	while(true)
 			clients.get(clients.size()-1).findConnections(clients);
-			System.out.println("haio");
+			
+			if (updated)
+				updateClients();
 
 
 		}
@@ -85,7 +90,10 @@ public class Server implements Runnable{
 
 	// TODO Whenever a message is received, update the logs of all the clients
 	public void updateClients(){
-
+		
+		
+		
+		updated = false;
 	}
 
 }

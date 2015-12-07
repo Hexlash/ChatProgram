@@ -41,8 +41,6 @@ public class ClientThread implements Runnable{
 	}
 
 	public void run(){
-		System.out.println("A");
-		
 		boolean running = true;
 		ServerGUI.addToLog("Client with IP " + this.client.getInetAddress() + " has connected.");
 
@@ -53,19 +51,20 @@ public class ClientThread implements Runnable{
 			while (running){
 				String inputLine = null;
 				//System.out.println("c");
-				if(in.ready())
+				//if(in.ready())
 					inputLine = in.readLine(); //TODO replace with message object 
 				// Because message object will be error trapped before sending on client side
 				//System.out.println("d");
-				if (inputLine!=null && inputLine.equals("Off")){
-					ServerGUI.addToLog("Client with IP " + client.getInetAddress() + " disconnecting.");
+				if (inputLine==null){
+					ServerGUI.addToLog("Client with IP " + client.getInetAddress() + " disconnected.");
 					in.close();
 					running = false;
 					return;
 				}
-				//System.out.println("e");
-				if(inputLine!=null)
+				else{
 					ServerGUI.addToLog(inputLine);
+					Server.updated = true;
+				}
 			
 //				if (inputLine.equals("Off")){
 //					ServerGUI.addToLog("Client with IP " + client.getInetAddress() + " disconnecting.");
@@ -80,7 +79,5 @@ public class ClientThread implements Runnable{
 			ServerGUI.addToLog(e.getMessage());
 			e.printStackTrace();
 		}
-
-		System.out.println("B");
 	}
 }
