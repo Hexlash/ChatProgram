@@ -96,7 +96,6 @@ public class ServerGUI extends JPanel implements Runnable{
 			
 			server.start();
 			
-			
 		}
 		
 	}
