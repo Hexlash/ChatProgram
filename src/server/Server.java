@@ -22,8 +22,9 @@ public class Server implements Runnable{
 	// Thread Variables
 	private boolean running;
 	Thread t;
-	
-	public static boolean updated = false;
+
+	public static volatile boolean updated = false;
+	public static volatile boolean seekingConnect = false;
 
 	public Server() {
 		clients = new ArrayList<ClientThread>();
@@ -58,7 +59,7 @@ public class Server implements Runnable{
 		}
 	}
 
-
+	// Automatically calls run afterword
 	public void start() {
 		if (t == null){
 			t = new Thread(this);
@@ -71,29 +72,39 @@ public class Server implements Runnable{
 
 
 
-//			if (!running)
-//				break;
-
+			//			if (!running)
+			//				break;
+			//ServerGUI.addToLog("OK1");
 			//ServerGUI.addToLog("Starting new client search");
-			// Create new clientThread
-			clients.add(new ClientThread(serverSocket));
+
+			if (!seekingConnect)
+				addClient();
 			
-			// Seek connections on that thread
-			clients.get(clients.size()-1).findConnections(clients);
-			
-			if (updated)
-				updateClients();
 
 
 		}
 	}
 
 	// TODO Whenever a message is received, update the logs of all the clients
-	public void updateClients(){
-		
-		
-		
+	public synchronized void updateClients(){
+
+		ServerGUI.addToLog("Update clients now");
+
 		updated = false;
 	}
 
+	public void addClient(){
+		// Stop the program from adding more client threads
+		seekingConnect = true;
+		// Create new clientThread
+		clients.add(new ClientThread(serverSocket));
+		//ServerGUI.addToLog("OK2");
+		// Seek connections on that thread, then maintain it
+		clients.get(clients.size()-1).start();	//TODO catch disconnect
+		//ServerGUI.addToLog("OK3");
+		
+		
+	}
+
+	
 }

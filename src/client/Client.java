@@ -2,7 +2,9 @@ package client;
 import java.io.*;
 import java.net.*;
 
-public class Client {
+public class Client implements Runnable{
+	
+	
 	public static void main(String[] args) {
 		//Try with resources, ensures that resources declared are closed (if they implement autocloseable)
 
@@ -56,5 +58,41 @@ public class Client {
 			System.err.println("Couldn't get I/O for the connection to host! Error:\n" + e);
 			System.exit(1);
 		}
+	}
+
+	
+	
+	// Sockets
+	private Socket socket;
+	
+	// Thread Variables
+	private boolean running;
+	Thread t;
+	
+	
+	public Client(){
+		try {
+			socket = new Socket("10.20.38.112", 60000);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void start(){
+		if (t == null){
+			t = new Thread(this);
+			t.setDaemon(true);
+			t.start();
+		}
+	}
+	
+	public void run() {
+		
+		while (running) {
+			
+		}
+		
 	}
 }

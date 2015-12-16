@@ -11,25 +11,27 @@ public class ClientThread implements Runnable{
 	public Thread t;
 	Socket client;
 	ServerSocket serverSocket;
-	public boolean conFound;
+	//public boolean connected;
 
 	public ClientThread(ServerSocket serverSocket){
 		// Connecting to available clients
 		this.serverSocket = serverSocket;
-		conFound = false;
+		//connected = false;
 	}
 
 	// Waits for connections, then returns a whether or not it found one
-	public void findConnections(ArrayList<ClientThread> clients){
+	public void findConnections(){
+	//	ServerGUI.addToLog("OK4");
 		try {
+			//ServerGUI.addToLog("OK5");
 			client = serverSocket.accept();	// Begin looking for connections
 		} catch (IOException e) {
 			ServerGUI.addToLog("Error establishing connection to client:\n");
 			ServerGUI.addToLog(e.getMessage());
 			return;
 		}
-		ServerGUI.addToLog("CONNECTEDX");
-		clients.get(clients.size()-1).start();	//TODO catch disconnect
+		//ServerGUI.addToLog("ok6");
+		Server.seekingConnect = false;
 	}
 	
 	public void start(){
@@ -41,6 +43,7 @@ public class ClientThread implements Runnable{
 	}
 
 	public void run(){
+		findConnections();
 		boolean running = true;
 		ServerGUI.addToLog("Client with IP " + this.client.getInetAddress() + " has connected.");
 
@@ -64,6 +67,7 @@ public class ClientThread implements Runnable{
 				else{
 					ServerGUI.addToLog(inputLine);
 					Server.updated = true;
+					//System.out.println(Server.updated);
 				}
 			
 //				if (inputLine.equals("Off")){

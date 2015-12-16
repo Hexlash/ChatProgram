@@ -81,6 +81,7 @@ public class ServerGUI extends JPanel implements Runnable{
 		log = "";
 		
 		server = new Server();
+		server.start();										// Create and start Server
 		
 		draw();
 		drawToScreen();
@@ -93,11 +94,7 @@ public class ServerGUI extends JPanel implements Runnable{
 		while (running){
 			draw();
 			drawToScreen();
-			
-			server.start();
-			
 		}
-		
 	}
 	
 	public static void addToLog(String add){
@@ -105,8 +102,6 @@ public class ServerGUI extends JPanel implements Runnable{
 		textArea.setText(log);
 		textArea.setCaretPosition(textArea.getText().length()); // Auto scroll to bottom
 	}
-
-
 
 	/*public static void main(String args[]) {
 
