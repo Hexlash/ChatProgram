@@ -94,4 +94,10 @@ public class ClientGUI extends JPanel implements Runnable{
 		
 		
 	}
+	
+	public static void addToLog(String add){
+		log+=add+"\n";
+		textArea.setText(log);
+		textArea.setCaretPosition(textArea.getText().length()); // Auto scroll to bottom
+	}
 }

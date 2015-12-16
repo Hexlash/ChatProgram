@@ -72,10 +72,14 @@ public class Client implements Runnable{
 	
 	public Client(){
 		try {
+			// Connecting socket
 			socket = new Socket("10.20.38.112", 60000);
+		} catch (UnknownHostException e) {
+			System.err.println("Don't know about host! Error:\n" + e);
+			System.exit(1);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Couldn't get I/O for the connection to host! Error:\n" + e);
+			System.exit(1);
 		}
 		
 	}
@@ -89,7 +93,6 @@ public class Client implements Runnable{
 	}
 	
 	public void run() {
-		
 		while (running) {
 			
 		}
