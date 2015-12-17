@@ -25,6 +25,10 @@ public class Server implements Runnable{
 
 	public static volatile boolean updated = false;
 	public static volatile boolean seekingConnect = false;
+	
+	// Input from keyboard
+	public static String input;
+	private boolean isInput;
 
 	public Server() {
 		clients = new ArrayList<ClientThread>();
@@ -80,7 +84,7 @@ public class Server implements Runnable{
 			if (!seekingConnect)
 				addClient();
 			
-
+			
 
 		}
 	}

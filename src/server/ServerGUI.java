@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.TextArea;
+import java.awt.TextField;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -33,6 +34,9 @@ public class ServerGUI extends JPanel implements Runnable{
 	// Information Log Text Box
 	private static TextArea textArea;
 	private static String log;
+	
+	// Box where text is input
+	public static TextField tf;				
 	
 	// Server
 	Server server;
@@ -79,6 +83,16 @@ public class ServerGUI extends JPanel implements Runnable{
 		textArea.setEditable(false);						// Preventing the box from being editable
 		textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
 		log = "";
+		
+		// Textfield
+		tf = new TextField();				//Setting up a new text field
+		tf.setBounds(0, HEIGHT-50, WIDTH-WIDTH/10, 25);		//Set size and location
+		add(tf);							//Add it to the screen
+		setLayout(new BorderLayout());		//Required
+		CapitalizerAction ca = new CapitalizerAction(tf);//The action listener
+		tf.addActionListener(ca);			//Adding the action Listener
+		tf.setVisible(true);
+		tf.setFont(new Font("Serif", Font.PLAIN, 19));
 		
 		server = new Server();
 		server.start();										// Create and start Server
