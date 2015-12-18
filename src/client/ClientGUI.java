@@ -7,9 +7,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.TextArea;
+import java.awt.TextField;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
+
+import server.CapitalizerAction;
 
 public class ClientGUI extends JPanel implements Runnable{
 
@@ -17,84 +20,98 @@ public class ClientGUI extends JPanel implements Runnable{
 	public static final int HEIGHT = 800;
 
 	// Game thread
-		private Thread thread;		// Main thread
-		private boolean running; 
-		private int FPS = 60;
-		private long targetTime = 1000/FPS; 
+	private Thread thread;		// Main thread
+	private boolean running; 
+	private int FPS = 60;
+	private long targetTime = 1000/FPS; 
 
-		// Image vars
-		private BufferedImage image;
-		private Graphics2D g;
+	// Image vars
+	private BufferedImage image;
+	private Graphics2D g;
 
-		// Information Log Text Box
-		private static TextArea textArea;
-		private static String log;
-		
-		// Server
-		Client client;;
-		
-		public ClientGUI(){
-			super();
-			setPreferredSize(new Dimension(WIDTH, HEIGHT));
-			setFocusable(true);
-			requestFocus();
-		}
+	// Information Log Text Box
+	private static TextArea textArea;
+	private static String log;
 
-		public void addNotify(){				// Declares parent status and adds listeners
-			super.addNotify();
-			if (thread == null){
-				thread = new Thread(this);
-				thread.start();
-			}
-		}
+	// Box where text is input
+	public static TextField tf;				
 
-		private void draw(){
-			g.setColor(Color.WHITE);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
-			
-			
-		}
-		
-		private void drawToScreen() {						
-			Graphics g2 = getGraphics();
-			g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
-			g2.dispose();
-		}
 
-		public void init(){
-			image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-			g = (Graphics2D) image.getGraphics();
-			running = true;
-			
-			
-			// Creating log
-			textArea = new TextArea("Chat Client V.1", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
-			textArea.setBounds(0, 0, WIDTH-WIDTH/10, HEIGHT-50);
-			add(textArea);										// Add it to the screen
-			setLayout(new BorderLayout());						// Required
-			textArea.setEditable(false);						// Preventing the box from being editable
-			textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
-			log = "";
-			
-			client = new Client();
-			client.start();										// Create and start the client
-			
-			draw();
-			drawToScreen();
+	// Server
+	Client client;
+
+	public ClientGUI(){
+		super();
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setFocusable(true);
+		requestFocus();
 	}
 
-	
+	public void addNotify(){				// Declares parent status and adds listeners
+		super.addNotify();
+		if (thread == null){
+			thread = new Thread(this);
+			thread.start();
+		}
+	}
+
+	private void draw(){
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+
+
+	}
+
+	private void drawToScreen() {						
+		Graphics g2 = getGraphics();
+		g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
+		g2.dispose();
+	}
+
+	public void init(){
+		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		g = (Graphics2D) image.getGraphics();
+		running = true;
+
+
+		// Creating log
+		textArea = new TextArea("Chat Client V.1", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		textArea.setBounds(0, 0, WIDTH-WIDTH/10, HEIGHT-50);
+		add(textArea);										// Add it to the screen
+		setLayout(new BorderLayout());						// Required
+		textArea.setEditable(false);						// Preventing the box from being editable
+		textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
+		log = "";
+
+		// Textfield
+		tf = new TextField();				//Setting up a new text field
+		tf.setBounds(0, HEIGHT-50, WIDTH-WIDTH/10, 25);		//Set size and location
+		add(tf);							//Add it to the screen
+		setLayout(new BorderLayout());		//Required
+		CapitalizerAction ca = new CapitalizerAction(tf);//The action listener
+		tf.addActionListener(ca);			//Adding the action Listener
+		tf.setVisible(true);
+		tf.setFont(new Font("Serif", Font.PLAIN, 19));
+
+		client = new Client();
+		client.start();										// Create and start the client
+
+		draw();
+		drawToScreen();
+	}
+
+
 	public void run() {
 		init();
-		
+
 		while (running) {
 			draw();
 			drawToScreen();
 		}
-		
-		
+
+
 	}
-	
+
 	public static void addToLog(String add){
 		log+=add+"\n";
 		textArea.setText(log);

@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -13,7 +13,7 @@ public class CapitalizerAction implements ActionListener{	//Class to take in act
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		ServerGUI.addToLog(tf.getText());	// Submitting text
+		ClientGUI.addToLog(tf.getText());	// Submitting text
 		tf.setText("");		// Clearing box
 	}
 }
