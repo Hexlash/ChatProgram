@@ -1,12 +1,9 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class Server implements Runnable{
@@ -25,10 +22,9 @@ public class Server implements Runnable{
 
 	public static volatile boolean updated = false;
 	public static volatile boolean seekingConnect = false;
-	
+
 	// Input from keyboard
 	public static String input;
-	private boolean isInput;
 
 	public Server() {
 		clients = new ArrayList<ClientThread>();
@@ -83,17 +79,30 @@ public class Server implements Runnable{
 
 			if (!seekingConnect)
 				addClient();
-			
-			
+
+
 
 		}
 	}
-
-	// TODO Whenever a message is received, update the logs of all the clients
+	
+	// Whenever message is received, relay message to all clients
 	public synchronized void updateClients(){
 
 		ServerGUI.addToLog("Update clients now");
+		for (int x = 0; x < clients.size(); x++) {
+			try {
+				PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true);
 
+				while (running) {
+					if (input != null)
+						out.println(input);		// Send out user input
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		//TODO prevent duplication
 		updated = false;
 	}
 
@@ -106,9 +115,5 @@ public class Server implements Runnable{
 		// Seek connections on that thread, then maintain it
 		clients.get(clients.size()-1).start();	//TODO catch disconnect
 		//ServerGUI.addToLog("OK3");
-		
-		
 	}
-
-	
 }

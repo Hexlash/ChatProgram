@@ -84,4 +84,8 @@ public class ClientThread implements Runnable{
 			e.printStackTrace();
 		}
 	}
+
+	public Socket getClient() {
+		return client;
+	}
 }
