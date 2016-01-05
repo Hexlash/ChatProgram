@@ -74,31 +74,27 @@ public class Server implements Runnable{
 
 			//			if (!running)
 			//				break;
-			//ServerGUI.addToLog("OK1");
-			//ServerGUI.addToLog("Starting new client search");
 
 			if (!seekingConnect)
 				addClient();
 
-
+			if (updated)
+				updateClients();
+			
 
 		}
 	}
 	
 	// Whenever message is received, relay message to all clients
 	public synchronized void updateClients(){
-
-		ServerGUI.addToLog("Update clients now");
-		for (int x = 0; x < clients.size(); x++) {
+		for (int x = 0; x < clients.size()-1; x++) {
 			try {
 				PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true);
 
-				while (running) {
-					if (input != null)
-						out.println(input);		// Send out user input
-				}
+				out.println(ClientThread.getClient().getInetAddress() + ": " + ClientThread.inputLine);		// Send out user input
+				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				ServerGUI.addToLog("Error sending to clients!");
 				e.printStackTrace();
 			}
 		}

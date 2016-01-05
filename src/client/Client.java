@@ -12,6 +12,7 @@ public class Client implements Runnable{
 
 	// Input from keyboard
 	public static String input;
+	public static boolean update = false;
 
 	public Client(){
 		running = true;
@@ -23,7 +24,6 @@ public class Client implements Runnable{
 
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for the connection to host! Error:\n" + e);
-
 		}
 
 	}
@@ -47,11 +47,12 @@ public class Client implements Runnable{
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 			
 			while (running) {
-				if (input != null){			// If the input is not null, then
+				System.out.println(update);	// TODO why is this needed??
+				if (update){				// If input is received, then
 					out.println(input);		// Send out user input
-					input = null;			//Clearing the input
+					update = false;
 				}
-					
+				
 			}
 				
 		} catch (IOException e) {

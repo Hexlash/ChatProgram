@@ -77,13 +77,14 @@ public class ServerGUI extends JPanel implements Runnable{
 		
 		
 		// Creating log
-		textArea = new TextArea("Chat Server V.1", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		log = "Chat Server V.1\n";
+		textArea = new TextArea(log, 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		textArea.setBounds(0, 0, WIDTH-WIDTH/10, HEIGHT-50);
 		add(textArea);										// Add it to the screen
 		setLayout(new BorderLayout());						// Required
 		textArea.setEditable(false);						// Preventing the box from being editable
 		textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
-		log = "";
+
 		System.out.println("set");
 		
 		// Textfield
@@ -101,7 +102,6 @@ public class ServerGUI extends JPanel implements Runnable{
 		
 		draw();
 		drawToScreen();
-		
 	}
 
 	public void run() {
@@ -128,46 +128,8 @@ public class ServerGUI extends JPanel implements Runnable{
 	}
 	
 	public static void addToLog(String add){
-		log += (add + "\n");
+		log += add + "\n";
 		textArea.setText(log);
 		textArea.setCaretPosition(textArea.getText().length()); // Auto scroll to bottom
 	}
-
-	/*public static void main(String args[]) {
-
-		try {
-			System.out.println("Starting Server...");
-			InetAddress addr = InetAddress.getByName("Wesleys-MacBook-Air.local");
-			ServerSocket serverSocket = new ServerSocket(60000, 50, addr);
-			System.out.println("Server started on IP " + serverSocket.getInetAddress() +". Awaiting connections on port 60000.");
-			//Server socket started, and listening for connections
-			Socket clientSocket = serverSocket.accept(); 
-			//Program is paused until connection is established.
-
-			System.out.println("Client with IP " + clientSocket.getInetAddress() + " has connected.");
-
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-			//Opening output stream that writes to the client's socket (with autoflush (Move data along without buffering it))
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			//Opening input stream that takes input from the client's socket
-
-			String inputLine;
-			while ((inputLine = in.readLine()) != null) {
-				out.println(inputLine);
-				System.out.println("\"" + inputLine + "\" was received from and echoed back to the IP of: " + clientSocket.getInetAddress());
-				if (inputLine.equals("Off")){
-					System.out.println("Server shutting off.");
-					in.close();
-					out.close();
-					clientSocket.close();
-					serverSocket.close();
-				}
-			}
-		} catch (IOException e) {
-			System.out.println("Exception caught when trying to listen on port 60000 or listening for a connection:");
-			System.out.println(e.getMessage());
-		}
-
-	}*/
 }

@@ -27,16 +27,17 @@ public class ServerListener implements Runnable{
 		boolean running = true;
 
 		try {
-
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			ClientGUI.addToLog("Connected!");
-			//Opening an input stream in through the client's socket
+			
+			// Opening an input stream in through the client's socket
 			while(running){
+				// Starting with no input
 				String inputLine = null;
-				//System.out.println("c");
-				//if(in.ready())
+				
+				// Waiting for input from the server
 				inputLine = in.readLine(); //TODO replace with message object 
-				//System.out.println("d");
+				
 				if (inputLine == null){
 					ClientGUI.addToLog("Disconnected from Server.");
 					in.close();
@@ -45,10 +46,8 @@ public class ServerListener implements Runnable{
 				}
 				else{
 					ClientGUI.addToLog(inputLine);
-					//System.out.println(Server.updated);
 				}
 			}
-			//
 		} catch (IOException e) {
 			ClientGUI.addToLog("Can't find server!");
 			e.printStackTrace();

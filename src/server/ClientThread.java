@@ -7,12 +7,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ClientThread implements Runnable{
+	// Thread
 	public Thread t;
-	Socket client;
-	ServerSocket serverSocket;
-	//public boolean connected;
+	
+	// Sockets
+	private static Socket client;
+	private ServerSocket serverSocket;
+	
+	// Run-time Vars
+	private boolean running;
+	public static String inputLine;
 
 	public ClientThread(ServerSocket serverSocket){
+		running = true;
 		// Connecting to available clients
 		this.serverSocket = serverSocket;
 		//connected = false;
@@ -43,27 +50,24 @@ public class ClientThread implements Runnable{
 
 	public void run(){
 		findConnections();
-		boolean running = true;
 		ServerGUI.addToLog("Client with IP " + this.client.getInetAddress() + " has connected.");
 
 		try {
+			// Opening input stream that takes input from the client's socket
 			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			//Opening input stream that takes input from the client's socket
 			
 			while (running){
-				String inputLine = null;
-				//System.out.println("c");
-				//if(in.ready())
-					inputLine = in.readLine(); //TODO replace with message object 
+				inputLine = in.readLine(); //TODO replace with message object 
 				// Because message object will be error trapped before sending on client side
-				//System.out.println("d");
-				if (inputLine==null){
+				
+				if (inputLine == null){
 					ServerGUI.addToLog("Client with IP " + client.getInetAddress() + " disconnected.");
 					in.close();
 					running = false;
 					return;
 				}
-				else{
+				
+				else {
 					ServerGUI.addToLog(inputLine);
 					Server.updated = true;
 					//System.out.println(Server.updated);
@@ -84,7 +88,7 @@ public class ClientThread implements Runnable{
 		}
 	}
 
-	public Socket getClient() {
+	public static Socket getClient() {
 		return client;
 	}
 }

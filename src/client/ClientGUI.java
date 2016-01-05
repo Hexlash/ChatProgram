@@ -77,13 +77,14 @@ public class ClientGUI extends JPanel implements Runnable{
 
 
 		// Creating log
-		textArea = new TextArea("Chat Client V.1", 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		log = "Chat Client V.1\n";
+		textArea = new TextArea(log, 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		textArea.setBounds(0, 0, WIDTH-WIDTH/10, HEIGHT-50);
 		add(textArea);										// Add it to the screen
 		setLayout(new BorderLayout());						// Required
 		textArea.setEditable(false);						// Preventing the box from being editable
 		textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
-		log = "";
+
 
 		// Textfield
 		tf = new TextField();				//Setting up a new text field
@@ -129,7 +130,7 @@ public class ClientGUI extends JPanel implements Runnable{
 	}
 
 	public static void addToLog(String add){
-		log+=add+"\n";
+		log += add + "\n";
 		textArea.setText(log);
 		textArea.setCaretPosition(textArea.getText().length()); // Auto scroll to bottom
 	}
