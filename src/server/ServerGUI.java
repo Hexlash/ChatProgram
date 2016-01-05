@@ -1,7 +1,5 @@
 package server;
 
-import java.net.*;
-import java.util.ArrayList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,13 +9,16 @@ import java.awt.Graphics2D;
 import java.awt.TextArea;
 import java.awt.TextField;
 import java.awt.image.BufferedImage;
-import java.io.*;
 
 import javax.swing.JPanel;
 
 //public class MyServer{
 public class ServerGUI extends JPanel implements Runnable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final int WIDTH = 1200;
 	public static final int HEIGHT = 800;
 
@@ -83,6 +84,7 @@ public class ServerGUI extends JPanel implements Runnable{
 		textArea.setEditable(false);						// Preventing the box from being editable
 		textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
 		log = "";
+		System.out.println("set");
 		
 		// Textfield
 		tf = new TextField();				//Setting up a new text field
@@ -105,14 +107,28 @@ public class ServerGUI extends JPanel implements Runnable{
 	public void run() {
 		init();
 
-		while (running){
+		long start, elapsed, wait;
+		
+		while (running) {
+			start = System.nanoTime();
+			
 			draw();
 			drawToScreen();
+			
+			elapsed = System.nanoTime() - start;
+			wait = targetTime - elapsed/1000000;
+			if(wait <0) wait = 5;
+			try{
+				Thread.sleep(wait);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public static void addToLog(String add){
-		log+=add+"\n";
+		log += (add + "\n");
 		textArea.setText(log);
 		textArea.setCaretPosition(textArea.getText().length()); // Auto scroll to bottom
 	}

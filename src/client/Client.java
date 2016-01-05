@@ -14,6 +14,7 @@ public class Client implements Runnable{
 	public static String input;
 
 	public Client(){
+		running = true;
 		try {
 			// Connecting socket
 			socket = new Socket("10.20.38.112", 60000);
@@ -42,14 +43,19 @@ public class Client implements Runnable{
 		serverListener.start();
 		
 		try {
-			PrintWriter out =  new PrintWriter(socket.getOutputStream(), true);
-
+			// Establishing the object that sends the messages from the socket
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			
 			while (running) {
-				if (input != null)
+				if (input != null){			// If the input is not null, then
 					out.println(input);		// Send out user input
+					input = null;			//Clearing the input
+				}
+					
 			}
+				
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			ClientGUI.addToLog("Error sending!");
 			e.printStackTrace();
 		}
 

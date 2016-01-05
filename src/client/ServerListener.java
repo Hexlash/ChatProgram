@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import server.ServerGUI;
-
 public class ServerListener implements Runnable{
 	public Thread t;
 	Socket client;
@@ -27,11 +25,11 @@ public class ServerListener implements Runnable{
 
 	public void run(){
 		boolean running = true;
-		ClientGUI.addToLog("Connected!");
 
 		try {
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			ClientGUI.addToLog("Connected!");
 			//Opening an input stream in through the client's socket
 			while(running){
 				String inputLine = null;
@@ -39,20 +37,20 @@ public class ServerListener implements Runnable{
 				//if(in.ready())
 				inputLine = in.readLine(); //TODO replace with message object 
 				//System.out.println("d");
-				if (inputLine==null){
-					ServerGUI.addToLog("Disconnected from Server.");
+				if (inputLine == null){
+					ClientGUI.addToLog("Disconnected from Server.");
 					in.close();
 					running = false;
 					return;
 				}
 				else{
-					ServerGUI.addToLog(inputLine);
+					ClientGUI.addToLog(inputLine);
 					//System.out.println(Server.updated);
 				}
 			}
 			//
 		} catch (IOException e) {
-
+			ClientGUI.addToLog("Can't find server!");
 			e.printStackTrace();
 		}
 	}

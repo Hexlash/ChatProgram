@@ -12,8 +12,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import server.CapitalizerAction;
-
 public class ClientGUI extends JPanel implements Runnable{
 
 	/**

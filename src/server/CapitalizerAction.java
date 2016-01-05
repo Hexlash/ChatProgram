@@ -4,7 +4,7 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CapitalizerAction implements ActionListener{	//Class to take in actions from the text field
+public class CapitalizerAction implements ActionListener{	// Class to take in actions from the text field
 
 	private static TextField tf;
 
