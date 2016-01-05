@@ -16,6 +16,10 @@ import server.CapitalizerAction;
 
 public class ClientGUI extends JPanel implements Runnable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final int WIDTH = 1200;
 	public static final int HEIGHT = 800;
 
@@ -104,9 +108,23 @@ public class ClientGUI extends JPanel implements Runnable{
 	public void run() {
 		init();
 
+		long start, elapsed, wait;
+		
 		while (running) {
+			start = System.nanoTime();
+			
 			draw();
 			drawToScreen();
+			
+			elapsed = System.nanoTime() - start;
+			wait = targetTime - elapsed/1000000;
+			if(wait <0) wait = 5;
+			try{
+				Thread.sleep(wait);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 
 

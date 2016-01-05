@@ -36,8 +36,11 @@ public class Client implements Runnable{
 	}
 
 	public void run() {
-		ServerListener serverListener = new ServerListener(socket);	// Establish a listener on the server to receive input 
-
+		// Establish a listener on the server to receive input 
+		ServerListener serverListener = new ServerListener(socket);
+		// Starting server listening on new thread
+		serverListener.start();
+		
 		try {
 			PrintWriter out =  new PrintWriter(socket.getOutputStream(), true);
 
