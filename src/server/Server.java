@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Server implements Runnable{
 	// Sockets
 	private ServerSocket serverSocket;
-	private ArrayList<ClientThread> clients;
+	private static volatile ArrayList<ClientThread> clients;
 
 	// Server info
 	private int port = 60000;
@@ -68,6 +68,8 @@ public class Server implements Runnable{
 		}
 	}
 	public void run(){
+
+
 		while (running){
 
 
@@ -81,24 +83,20 @@ public class Server implements Runnable{
 			if (updated)
 				updateClients();
 			
-
 		}
 	}
-	
+
 	// Whenever message is received, relay message to all clients
 	public synchronized void updateClients(){
-		for (int x = 0; x < clients.size()-1; x++) {
-			try {
-				PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true);
-
-				out.println(ClientThread.getClient().getInetAddress() + ": " + ClientThread.inputLine);		// Send out user input
-				
+		for (int x = 0; x < clients.size()-1; x++) {	// Note, there is always one more client than there are actual clients because of the one currently searching
+			try (PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true)) {
+				out.println(clients.get(x).name + ": " + clients.get(x).inputLine);		// Send out user input		
 			} catch (IOException e) {
 				ServerGUI.addToLog("Error sending to clients!");
 				e.printStackTrace();
 			}
 		}
-		//TODO prevent duplication
+
 		updated = false;
 	}
 
@@ -107,9 +105,40 @@ public class Server implements Runnable{
 		seekingConnect = true;
 		// Create new clientThread
 		clients.add(new ClientThread(serverSocket));
-		//ServerGUI.addToLog("OK2");
 		// Seek connections on that thread, then maintain it
-		clients.get(clients.size()-1).start();	//TODO catch disconnect
-		//ServerGUI.addToLog("OK3");
+		clients.get(clients.size()-1).start();
+	}
+	
+	public static void inforNewConnect(){
+		// Informing clients
+		for (int x = 0; x < clients.size()-1; x++) {	// Note, there is always one more client than there are actual clients because of the one currently searching
+			try (PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true)) {
+				//	 TODO make sure it won't send back to user.
+					out.println(clients.get(clients.size()-2).name + " has connected.");		// Send out user input, two because one accounts for the the size and one for the extra clientThread looking for connections
+			} catch (IOException e) {
+				ServerGUI.addToLog("Error sending to clients!");
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void removeClient(ClientThread client){
+		// Remove that client
+		for (int x = 0; x < clients.size()-1; x++)
+			if (clients.get(x).equals(client)){
+				clients.remove(x);
+				client = null;
+				return;
+			}
+		ServerGUI.addToLog(client.name + " has disconnected.");
+		// Informing clients
+		for (int x = 0; x < clients.size()-1; x++) {	// Note, there is always one more client than there are actual clients because of the one currently searching
+			try (PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true)) {
+				out.println(client.name + " has disconnected.");		// Send out user input
+			} catch (IOException e) {
+				ServerGUI.addToLog("Error sending to clients!");
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -28,25 +28,20 @@ public class ServerListener implements Runnable{
 
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			ClientGUI.addToLog("Connected!");
-			
+			//ClientGUI.addToLog("Connected!");
+
 			// Opening an input stream in through the client's socket
 			while(running){
 				// Starting with no input
 				String inputLine = null;
-				
+
+				System.out.println("Waiting...");
 				// Waiting for input from the server
 				inputLine = in.readLine(); //TODO replace with message object 
-				
-				if (inputLine == null){
-					ClientGUI.addToLog("Disconnected from Server.");
-					in.close();
-					running = false;
-					return;
-				}
-				else{
+
+				if (inputLine != null) 
 					ClientGUI.addToLog(inputLine);
-				}
+				
 			}
 		} catch (IOException e) {
 			ClientGUI.addToLog("Can't find server!");

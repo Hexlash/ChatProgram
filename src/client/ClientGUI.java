@@ -108,13 +108,13 @@ public class ClientGUI extends JPanel implements Runnable{
 		init();
 
 		long start, elapsed, wait;
-		
+
 		while (running) {
 			start = System.nanoTime();
-			
+
 			draw();
 			drawToScreen();
-			
+
 			elapsed = System.nanoTime() - start;
 			wait = targetTime - elapsed/1000000;
 			if(wait <0) wait = 5;

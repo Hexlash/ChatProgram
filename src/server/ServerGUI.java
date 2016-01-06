@@ -35,13 +35,13 @@ public class ServerGUI extends JPanel implements Runnable{
 	// Information Log Text Box
 	private static TextArea textArea;
 	private static String log;
-	
+
 	// Box where text is input
 	public static TextField tf;				
-	
+
 	// Server
 	Server server;
-	
+
 	public ServerGUI(){
 		super();
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -60,10 +60,10 @@ public class ServerGUI extends JPanel implements Runnable{
 	private void draw(){
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		
-		
+
+
 	}
-	
+
 	private void drawToScreen() {						
 		Graphics g2 = getGraphics();
 		g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
@@ -74,8 +74,8 @@ public class ServerGUI extends JPanel implements Runnable{
 		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 		running = true;
-		
-		
+
+
 		// Creating log
 		log = "Chat Server V.1\n";
 		textArea = new TextArea(log, 10, 10, TextArea.SCROLLBARS_VERTICAL_ONLY);
@@ -85,8 +85,6 @@ public class ServerGUI extends JPanel implements Runnable{
 		textArea.setEditable(false);						// Preventing the box from being editable
 		textArea.setFont(new Font("Serif", Font.PLAIN, 19));// Setting font
 
-		System.out.println("set");
-		
 		// Textfield
 		tf = new TextField();				//Setting up a new text field
 		tf.setBounds(0, HEIGHT-50, WIDTH-WIDTH/10, 25);		//Set size and location
@@ -96,10 +94,10 @@ public class ServerGUI extends JPanel implements Runnable{
 		tf.addActionListener(ca);			//Adding the action Listener
 		tf.setVisible(true);
 		tf.setFont(new Font("Serif", Font.PLAIN, 19));
-		
+
 		server = new Server();
 		server.start();										// Create and start Server
-		
+
 		draw();
 		drawToScreen();
 	}
@@ -108,13 +106,13 @@ public class ServerGUI extends JPanel implements Runnable{
 		init();
 
 		long start, elapsed, wait;
-		
+
 		while (running) {
 			start = System.nanoTime();
-			
+
 			draw();
 			drawToScreen();
-			
+
 			elapsed = System.nanoTime() - start;
 			wait = targetTime - elapsed/1000000;
 			if(wait <0) wait = 5;
@@ -126,7 +124,7 @@ public class ServerGUI extends JPanel implements Runnable{
 			}
 		}
 	}
-	
+
 	public static void addToLog(String add){
 		log += add + "\n";
 		textArea.setText(log);
