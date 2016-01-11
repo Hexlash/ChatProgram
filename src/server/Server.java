@@ -20,7 +20,7 @@ public class Server implements Runnable{
 	private boolean running;
 	Thread t;
 
-	public static volatile boolean updated = false;
+	public static volatile boolean updated;
 	public static volatile boolean seekingConnect = false;
 
 	// Input from keyboard
@@ -69,26 +69,28 @@ public class Server implements Runnable{
 	}
 	public void run(){
 
-
+		updated = false;
 		while (running){
-
-
-
 			//			if (!running)
 			//				break;
 
 			if (!seekingConnect)
 				addClient();
 
-			if (updated)
+			if (updated){
+				ServerGUI.addToLog("Going to update now.");
 				updateClients();
-			
+				ServerGUI.addToLog("Left updating");
+			}
+			//if (clients.get(0).getClient().isConnected()) System.out.println("eh?");
 		}
 	}
 
 	// Whenever message is received, relay message to all clients
-	public synchronized void updateClients(){
+	public void updateClients(){
+		ServerGUI.addToLog("Updating");
 		for (int x = 0; x < clients.size()-1; x++) {	// Note, there is always one more client than there are actual clients because of the one currently searching
+			ServerGUI.addToLog("client");
 			try (PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true)) {
 				out.println(clients.get(x).name + ": " + clients.get(x).inputLine);		// Send out user input		
 			} catch (IOException e) {
@@ -120,6 +122,7 @@ public class Server implements Runnable{
 				e.printStackTrace();
 			}
 		}
+		updated = false;
 	}
 	
 	public static void removeClient(ClientThread client){

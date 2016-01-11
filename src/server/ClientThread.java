@@ -60,7 +60,8 @@ public class ClientThread implements Runnable{
 			ServerGUI.addToLog("Client " + this.client.getInetAddress() + " set name to " + name);
 			
 			Server.inforNewConnect();
-			
+			inputLine = null;
+			System.out.println("boop");
 			while (running){
 				System.out.println(" ");
 				inputLine = in.readLine(); //TODO replace with message object 
@@ -68,7 +69,9 @@ public class ClientThread implements Runnable{
 
 				if (inputLine != null) {
 					ServerGUI.addToLog(name + ": " + inputLine);
+					ServerGUI.addToLog("but whhhhat");
 					Server.updated = true;
+					ServerGUI.addToLog(Server.updated ? "true" : "false");
 				}	
 			}
 			

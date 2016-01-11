@@ -35,7 +35,6 @@ public class ServerListener implements Runnable{
 				// Starting with no input
 				String inputLine = null;
 
-				System.out.println("Waiting...");
 				// Waiting for input from the server
 				inputLine = in.readLine(); //TODO replace with message object 
 
