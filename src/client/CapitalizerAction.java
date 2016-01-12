@@ -15,7 +15,9 @@ public class CapitalizerAction implements ActionListener{	//Class to take in act
 	public void actionPerformed(ActionEvent ae) {
 		//ClientGUI.addToLog(tf.getText());	// Submitting text to client terminal
 		Client.input = tf.getText();		// Setting input so the Client class sends it to server
+		ClientGUI.addToLog("input is " + Client.input);
 		tf.setText("");		// Clearing box
+		ClientGUI.addToLog("Setting update to true!");
 		Client.update = true;
 	}
 }

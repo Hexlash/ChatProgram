@@ -82,13 +82,13 @@ public class Server implements Runnable{
 				updateClients();
 				ServerGUI.addToLog("Left updating");
 			}
-			//if (clients.get(0).getClient().isConnected()) System.out.println("eh?");
+			//if (clients.get(0).getClient().equals(null) && (clients.get(0).getClient().isConnected()) ) System.out.println("blah");	//TODO why is THIS needed? - keeps socket from closing
 		}
 	}
 
 	// Whenever message is received, relay message to all clients
-	public void updateClients(){
-		ServerGUI.addToLog("Updating");
+	public synchronized void updateClients(){
+		ServerGUI.addToLog("Updating cleints");
 		for (int x = 0; x < clients.size()-1; x++) {	// Note, there is always one more client than there are actual clients because of the one currently searching
 			ServerGUI.addToLog("client");
 			try (PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true)) {
@@ -100,19 +100,26 @@ public class Server implements Runnable{
 		}
 
 		updated = false;
+		
 	}
 
-	public void addClient(){
+	public synchronized void addClient(){
+		ServerGUI.addToLog("Adding client now");
 		// Stop the program from adding more client threads
 		seekingConnect = true;
+		ServerGUI.addToLog("will now continue lokng for connections\nProceeding to add a new client");
 		// Create new clientThread
 		clients.add(new ClientThread(serverSocket));
+		ServerGUI.addToLog("new clienthrread should be done");
 		// Seek connections on that thread, then maintain it
+		ServerGUI.addToLog("That clientthread should be looking for a client now");
 		clients.get(clients.size()-1).start();
+		ServerGUI.addToLog("Number of clients: " + clients.size());
 	}
 	
-	public static void inforNewConnect(){
+	public static synchronized void inforNewConnect(){
 		// Informing clients
+		ServerGUI.addToLog("informing clients now.");
 		for (int x = 0; x < clients.size()-1; x++) {	// Note, there is always one more client than there are actual clients because of the one currently searching
 			try (PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true)) {
 				//	 TODO make sure it won't send back to user.
@@ -123,10 +130,12 @@ public class Server implements Runnable{
 			}
 		}
 		updated = false;
+		ServerGUI.addToLog("done ibforming clients");
 	}
 	
-	public static void removeClient(ClientThread client){
+	public static synchronized void removeClient(ClientThread client){
 		// Remove that client
+		ServerGUI.addToLog("removing the client");
 		for (int x = 0; x < clients.size()-1; x++)
 			if (clients.get(x).equals(client)){
 				clients.remove(x);
@@ -134,6 +143,8 @@ public class Server implements Runnable{
 				return;
 			}
 		ServerGUI.addToLog(client.name + " has disconnected.");
+		
+		ServerGUI.addToLog("Telling toher clients that the client dc'd");
 		// Informing clients
 		for (int x = 0; x < clients.size()-1; x++) {	// Note, there is always one more client than there are actual clients because of the one currently searching
 			try (PrintWriter out =  new PrintWriter(clients.get(x).getClient().getOutputStream(), true)) {

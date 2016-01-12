@@ -26,21 +26,23 @@ public class ServerListener implements Runnable{
 	public void run(){
 		boolean running = true;
 
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream() ) ) ) {
 			//ClientGUI.addToLog("Connected!");
-
+			ClientGUI.addToLog("Server listener created");
 			// Opening an input stream in through the client's socket
+			ClientGUI.addToLog("input is null");
+			String inputLine = null;
 			while(running){
 				// Starting with no input
-				String inputLine = null;
-
+				ClientGUI.addToLog("Waiting for server input/update");
 				// Waiting for input from the server
 				inputLine = in.readLine(); //TODO replace with message object 
-
-				if (inputLine != null) 
-					ClientGUI.addToLog(inputLine);
 				
+				
+				if (inputLine != null) {
+					ClientGUI.addToLog("input detected");
+					ClientGUI.addToLog(inputLine);
+				}
 			}
 		} catch (IOException e) {
 			ClientGUI.addToLog("Can't find server!");

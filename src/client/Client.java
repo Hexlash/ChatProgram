@@ -29,7 +29,10 @@ public class Client implements Runnable{
 		running = true;
 		try {
 			// Connecting socket
+			ClientGUI.addToLog("trying to connect");
 			socket = new Socket("10.20.38.112", 60000);
+
+			ClientGUI.addToLog(socket.isConnected()? "Connected" : "somehow not connected?");
 		} catch (UnknownHostException e) {
 			ClientGUI.addToLog("Cannot find server! Is it up?");
 			System.err.println("Don't know about host! Error:\n" + e);
@@ -49,6 +52,7 @@ public class Client implements Runnable{
 
 	public void run() {
 		// Establish a listener on the server to receive input 
+		ClientGUI.addToLog("creating new serverlistener");
 		ServerListener serverListener = new ServerListener(socket);
 		// Starting server listening on new thread
 		serverListener.start();
@@ -56,17 +60,17 @@ public class Client implements Runnable{
 		// Establishing the object that sends the messages from the socket
 		try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 			// Telling the server what the name is
-			System.out.println("name once");
 			out.println(name);
-			System.out.println("name out");
 			update = false;
 			while (running) {
-				if (socket.isConnected() ) System.out.println("ON");	// TODO why is this needed??
+				if (socket.isConnected() ) System.out.println("ON");	// TODO why is this needed?? - without it, the user input isn't taken
 
+				
 				if (update){				// If input is received, then
 					out.println(input);		// Send out user input
 					update = false;
 				}
+				
 
 			}
 		} catch (IOException e) {
@@ -74,4 +78,6 @@ public class Client implements Runnable{
 			e.printStackTrace();
 		}
 	}
+	
+	
 }

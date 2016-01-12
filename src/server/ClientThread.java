@@ -31,14 +31,15 @@ public class ClientThread implements Runnable{
 		//	ServerGUI.addToLog("OK4");
 		try {
 			//ServerGUI.addToLog("OK5");
+			ServerGUI.addToLog("Looking for connections");
 			client = serverSocket.accept();	// Begin looking for connections
+			ServerGUI.addToLog(client.isConnected()? "connected" : "sopmehow not connected?");
 		} catch (IOException e) {
 			ServerGUI.addToLog("Error establishing connection to client:\n");
 			ServerGUI.addToLog(e.getMessage());
 			return;
 		}
 		//ServerGUI.addToLog("ok6");
-		Server.seekingConnect = false;
 	}
 
 	public void start(){
@@ -51,25 +52,36 @@ public class ClientThread implements Runnable{
 
 	public void run(){
 		findConnections();
+		Server.seekingConnect = false;
 		ServerGUI.addToLog("Client with IP " + this.client.getInetAddress() + " has connected.");
 		
 		// Opening input stream that takes input from the client's socket
 		try (BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
 			// Receiving name
+
+			ServerGUI.addToLog("Reading in name");
+			
 			name = in.readLine();
 			ServerGUI.addToLog("Client " + this.client.getInetAddress() + " set name to " + name);
 			
+			ServerGUI.addToLog("Going to inform clients of connect");
+			
 			Server.inforNewConnect();
+
+			ServerGUI.addToLog("Client shsould be informed of connect\nSetting input back to null");
+			
 			inputLine = null;
-			System.out.println("boop");
+
+		//	ServerGUI.addToLog("inputLine is" + (inputLine.equals(null)? "null" : inputLine) + "\n Starting main loop");
+			
 			while (running){
-				System.out.println(" ");
+				System.out.println(" waiting for input...");
 				inputLine = in.readLine(); //TODO replace with message object 
 				// Because message object will be error trapped before sending on client side
 
 				if (inputLine != null) {
 					ServerGUI.addToLog(name + ": " + inputLine);
-					ServerGUI.addToLog("but whhhhat");
+					ServerGUI.addToLog("person said this");
 					Server.updated = true;
 					ServerGUI.addToLog(Server.updated ? "true" : "false");
 				}	
